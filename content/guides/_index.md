@@ -23,5 +23,6 @@ different platforms.
 - [DigitalOcean Spaces](/guides/digitalocean)
 - [Google Cloud Storage](/guides/gs)
 - [Linode Object Storage](/guides/linode)
+- [Live Read Replication](/guides/read-replica)
 - [Scaleway Object Storage](/guides/scaleway)
 - [SFTP Server](/guides/sftp)
