@@ -64,7 +64,8 @@ Litestream can monitor one or more database files that are specified in the
 configuration file. Database files are also referenced in `litestream` commands
 by their absolute path.
 
-Each database accepts two options—its path and a list of replicas:
+The `path` field is required for the database and typically you'll have one or
+more replicas listed under the `replicas` field.
 
 ```yaml
 dbs:
@@ -77,6 +78,49 @@ dbs:
       - path: /backup/db2
       - url:  s3://mybkt.litestream.io/db2
 ```
+
+The database also supports the following settings:
+
+- `upstream`—specifies the primary Litestream instance when using live read
+  replication. See the following section for details.
+
+- `monitor-delay-interval`—specifies the amount of time to wait after a database
+  change before writing to the shadow WAL. This setting allows batching of
+  multiple transactions into a single WAL segment file. Defaults to `10ms`.
+
+- `checkpoint-interval`—specifies the interval at which to checkpoint the WAL
+  and start a new WAL index. This determines the granularity at which you can
+  perform point-in-time recovery. Defaults to `1m`.
+
+- `min-checkpoint-page-count`—the minimum number of WAL pages before Litestream
+  will perform a `PASSIVE` checkpoint. Defaults to `1000`.
+
+- `max-checkpoint-page-count`—the maximum number of WAL pages before Litestream
+  will perform a `RESTART` checkpoint. Defaults to `10000`.
+
+- `shadow-retention-count`—the number of WAL indexes to retain in the shadow
+  WAL. This is used to retain WAL files on the primary so that read replicas
+  have time to read them. Defaults to `32`.
+
+
+### Upstream settings
+
+The `upstream` field for the database enables read replication from another
+Litestream instance that acts as the primary. The primary must have the HTTP
+server enabled by setting the `addr` config property.
+
+Typically, you only need to specify the `url` field with the scheme, host, and
+port of the primary Litestream instance:
+
+```yaml
+dbs:
+  - path: /var/lib/db1
+    upstream:
+      - url: http://${PRIMARY_HOSTNAME}:9090
+```
+
+An `upstream.path` field is also available if the database path of the primary
+does not match the database path of the replica.
 
 
 ## Replica settings
