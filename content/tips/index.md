@@ -130,13 +130,17 @@ open your SQLite connection:
 PRAGMA wal_autocheckpoint = 0;
 ```
 
-## Multiple applications replicating into location can corrupt
+## Ephemeral hosts / multiple applications replicating into location can corrupt
 
 Multiple applications replicating into the same bucket can cause situations
 where you will be unable to restore. It is _your_ responsibility to ensure you
-do not have multiple applications replicating concurrently. In the off-chance
-that it does happen, and you're unable to restore, you may see an error along
-the lines of:
+do not have multiple applications replicating concurrently. This typically
+occurs if you on an ephemeral/serverless platform such as [Google Cloud Run] as
+they will run a second instance in parallel during deployments. Those types of
+environments are not supported.
+
+In the off-chance that it does happen, and you're unable to restore, you may see
+an error along the lines of:
 
 ```
 cannot find max wal index for restore: missing initial wal segment: generation=f6d6d1e96d38dafb index=00000093 offset=4152
@@ -158,5 +162,5 @@ replicating it again with Litestream.
 
 [pg]: https://www.postgresql.org/docs/9.3/warm-standby.html
 [s3-replica]: https://litestream.io/reference/config/#s3-replica
-
+[Google Cloud Run]: https://cloud.google.com/run
 
