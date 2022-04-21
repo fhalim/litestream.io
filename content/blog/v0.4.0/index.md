@@ -2,7 +2,7 @@
 title: "Litestream v0.4.0 Released"
 description: "The newest version of Litestream includes support for live read replication, improved test coverage, revamped WAL storage, and more."
 date: 2022-04-19T00:00:00Z
-draft: false
+draft: true
 weight: 50
 contributors: ["Ben Johnson"]
 ---
